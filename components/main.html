@@ -9,4 +9,21 @@
     <div class="container-sm mb-4 w-50" id="contactosContainer">
 
     </div>
+
+
+    <!-- NOTIFICACIONES -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+
+        <div id="notificacion" class="toast align-items-center text-white border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            
+            <div class="toast-header p-0">
+                <div class="notificacion-icono"><i id="notificacionIcono"></i></div>
+                <strong class="me-auto" id="notificacionTitulo"></strong>
+                <button type="button" class="btn-close m-2" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+
+            <div class="toast-body" id="notificacionMensaje"></div>
+
+        </div>
+    </div>
 </main>

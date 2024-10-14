@@ -1,43 +1,78 @@
 <script>
     
-    function mostrarTablaContactos() {
+    const mostrarTablaContactos = () => {
         if(document.getElementById('tablaContactos')) {
             alert('La tabla ya se esta mostrando!');
             return;
         }
 
-        google.script.run.withSuccessHandler(obj => {
-            let tabla = document.createElement('table');
-            tabla.id = 'tablaContactos';
+        google.script.run
+            .withSuccessHandler(obj => construirTablaContactos(obj))
+            .withFailureHandler(construirTablaContactosError)
+            .obtenerContactos();
+    }
 
-            let tablaHeader = document.createElement('thead');
-            let tablaBody = document.createElement('tbody');
+    const construirTablaContactos = (obj) => {
+        let tabla = document.createElement('table');
+        tabla.id = 'tablaContactos';
 
-            Array.from(obj).forEach((filaActual, i) => {
-                let fila = document.createElement('tr');
+        let tablaHeader = document.createElement('thead');
+        let tablaBody = document.createElement('tbody');
 
-                filaActual.forEach(celdaActual => {
-                    let celda = document.createElement('td');
-                    celda.textContent = celdaActual;
-                    fila.appendChild(celda);
-                })
-                
-                if(i == 0) {
-                    tablaHeader.appendChild(fila);
-                    tabla.appendChild(tablaHeader);
-                } else {
-                    tablaBody.appendChild(fila);
-                }
-                //i == 0? tabla.appendChild(tablaHeader.appendChild(fila)): tablaBody.appendChild(fila); => porque no funciona??
+        Array.from(obj).forEach((filaActual, i) => {
+            let fila = document.createElement('tr');
+
+            filaActual.forEach(celdaActual => {
+                let celda = document.createElement('td');
+                celda.textContent = celdaActual;
+                fila.appendChild(celda);
             })
+            
+            if(i == 0) {
+                tablaHeader.appendChild(fila);
+                tabla.appendChild(tablaHeader);
+            } else {
+                tablaBody.appendChild(fila);
+            }
+            //i == 0? tabla.appendChild(tablaHeader.appendChild(fila)): tablaBody.appendChild(fila); => porque no funciona??
+        })
 
-            tabla.appendChild(tablaBody);
+        tabla.appendChild(tablaBody);
 
-            tablaHeader.classList.add('table-dark');
-            tabla.classList.add('table', 'table-striped', 'border', 'border-3');
+        tablaHeader.classList.add('table-dark');
+        tabla.classList.add('table', 'table-striped', 'border', 'border-3');
 
-            document.getElementById("contactosContainer").appendChild(tabla);
-        }).obtenerContactos();
+        document.getElementById("contactosContainer").appendChild(tabla);
+
+        //Mostramos la notificacion de exito
+        crearNotificacion('Success', 'Contactos obtenidos correctamente', 'Todo en orden');
+    }
+
+    const construirTablaContactosError = () => {
+
+    }
+
+    const crearNotificacion = (tipo, mensaje, titulo) => {
+        //OBTENEMOS LOS DATOS
+        let mensajeNotificacion = document.getElementById('notificacionMensaje');
+        let tituloNotificacion = document.getElementById('notificacionTitulo');
+        let iconoNotificacion = document.getElementById('notificacionIcono');
+        
+        //Obtenemos el elemento contenedor de la notificacion
+        let notificacionElemento = document.getElementById('notificacion');
+
+        //Instanciamos la notificacion
+        let notificacion = bootstrap.Toast.getOrCreateInstance(notificacionElemento);
+
+        //EDITAMOS LA NOTIFICACION
+        iconoNotificacion.className = '';
+        iconoNotificacion.classList.add('bi', 'bi-check-circle');
+        mensajeNotificacion.textContent = mensaje;
+        tituloNotificacion.textContent = titulo;
+        notificacionElemento.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--color-verde-oscuro');
+
+        //MOSTRAMOS LA NOTIFICACION
+        notificacion.show();
     }
 
 </script>
