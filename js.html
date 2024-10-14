@@ -20,6 +20,9 @@
 
         if(document.getElementById('tablaContactos')) document.getElementById('tablaContactos').remove();
 
+        //Cerramos la ventana del modal
+        bootstrap.Modal.getInstance(document.getElementById('crearContactoModal')).hide();
+
         crearLoader('contactosContainer');
 
         google.script.run
@@ -33,7 +36,7 @@
         document.getElementById('formEmail').value = '';
 
         eliminarLoader();
-        
+
         mostrarTablaContactos();
 
         crearNotificacion(NOTIFICACION_OK, "Contacto creado correctamente", "Listo!");
