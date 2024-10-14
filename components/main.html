@@ -29,7 +29,7 @@
 
     <!-- MODAL -->
     <div class="modal fade" id="crearContactoModal" tabindex="-1" aria-labelledby="tituloCrearContactoModal" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-lg modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="tituloCrearContactoModal">Nuevo Contacto</h5>
@@ -39,14 +39,26 @@
                 <!-- FORMULARIO -->
                 <form onsubmit="guardarNuevoContacto()" method="dialog" id="formulario">
                     <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="nombre" class="form-label">Introduce el nombre del contacto</label>
-                            <input type="text" class="form-control" name="nombre" id="formNombre" required />
+                        <!-- NOMBRE Y APELLIDO -->
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <label for="nombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" name="nombre" id="formNombre" pattern="[\D]*" title="El campo nombre NO puede contener numeros" required />
+                            </div>
+
+                            <div class="col-6">
+                                <label for="nombre" class="form-label">Apellido</label>
+                                <input type="text" class="form-control" name="apellido" id="formApellido" pattern="[^0-9]*" title="El campo apellido NO puede contener numeros" required />
+                            </div>
                         </div>
-                 
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Introduce el email del contacto</label>
-                            <input type="email" class="form-control" name="email" id="formEmail" required />
+                        
+                        <!-- EMAIL Y WPP -->
+                        <div class="input-group mb-3">
+                            <span class="input-group-text"><i class="bi bi-envelope-at"></i></span>
+                            <input type="email" class="form-control me-4" name="email" id="formEmail" required />
+
+                            <span class="input-group-text"><i class="bi bi-whatsapp"></i></span>
+                            <input type="tel" class="form-control" name="telefono" id="formTelefono" pattern="[\d]{9,11}" title="El campo telefono solo puede contener numeros y tener entre 9 y 11 caracteres" required />
                         </div>
                     </div>
                     

@@ -17,6 +17,6 @@ function obtenerContactos() {
     return HOJA.getDataRange().getValues();
 }
 
-function insertarContacto(nombre, email) {
-    HOJA.appendRow([nombre, email]);
+function insertarContacto(nombre, apellido, email, wpp) {
+    HOJA.appendRow([nombre, apellido, email, wpp]);
 }

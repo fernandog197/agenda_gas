@@ -5,11 +5,18 @@
     
     const guardarNuevoContacto = () => {
         let nombre = document.getElementById('formNombre').value;
+        let apellido = document.getElementById('formApellido').value;
         let email = document.getElementById('formEmail').value;
+        let wpp = document.getElementById('formTelefono').value;
 
         //Chequeamos que los campos existen
         if(!nombre) {
             crearNotificacion(NOTIFICACION_WARNING, "El campo nombre es necesario", "Atencion!")
+            return;
+        }
+
+        if(!apellido) {
+            crearNotificacion(NOTIFICACION_WARNING, "El campo apellido es necesario", "Atencion!")
             return;
         }
 
@@ -28,12 +35,14 @@
         google.script.run
             .withSuccessHandler(guardarNuevoContactoSuccess)
             .withFailureHandler(guardarNuevoContactoError)
-            .insertarContacto(nombre, email);
+            .insertarContacto(nombre, apellido, email, wpp);
     }
 
     const guardarNuevoContactoSuccess = () => {
         document.getElementById('formNombre').value = '';
+        document.getElementById('formApellido').value = '';
         document.getElementById('formEmail').value = '';
+        document.getElementById('formTelefono').value = '';
 
         eliminarLoader();
 
