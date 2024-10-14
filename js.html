@@ -1,8 +1,11 @@
 <script>
+    const NOTIFICACION_OK = 1;
+    const NOTIFICACION_DANGER = 2;
+    const NOTIFICACION_WARNING = 3;
     
     const mostrarTablaContactos = () => {
         if(document.getElementById('tablaContactos')) {
-            alert('La tabla ya se esta mostrando!');
+            crearNotificacion(NOTIFICACION_WARNING, "La tabla ya se esta mostrando", 'Atencion!')
             return;
         }
 
@@ -40,16 +43,16 @@
         tabla.appendChild(tablaBody);
 
         tablaHeader.classList.add('table-dark');
-        tabla.classList.add('table', 'table-striped', 'border', 'border-3');
+        tabla.classList.add('table', 'table-striped', 'border', 'border-3', 'border-dark');
 
         document.getElementById("contactosContainer").appendChild(tabla);
 
         //Mostramos la notificacion de exito
-        crearNotificacion('Success', 'Contactos obtenidos correctamente', 'Todo en orden');
+        crearNotificacion(NOTIFICACION_OK, 'Contactos obtenidos correctamente', 'Todo en orden');
     }
 
     const construirTablaContactosError = () => {
-
+        crearNotificacion(NOTIFICACION_DANGER, "Hubo un problema obteniendo los contactos", "Error!");
     }
 
     const crearNotificacion = (tipo, mensaje, titulo) => {
@@ -65,11 +68,26 @@
         let notificacion = bootstrap.Toast.getOrCreateInstance(notificacionElemento);
 
         //EDITAMOS LA NOTIFICACION
-        iconoNotificacion.className = '';
-        iconoNotificacion.classList.add('bi', 'bi-check-circle');
         mensajeNotificacion.textContent = mensaje;
         tituloNotificacion.textContent = titulo;
-        notificacionElemento.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--color-verde-oscuro');
+        
+        if(tipo == NOTIFICACION_OK) {
+            iconoNotificacion.className = '';
+            iconoNotificacion.classList.add('bi', 'bi-check-circle');
+            notificacionElemento.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--color-verde-oscuro');
+        }
+
+        if(tipo == NOTIFICACION_WARNING) {
+            iconoNotificacion.className = '';
+            iconoNotificacion.classList.add('bi', 'bi-question-circle');
+            notificacionElemento.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--color-amarillo-oscuro');
+        }
+
+        if(tipo == NOTIFICACION_DANGER) {
+            iconoNotificacion.className = '';
+            iconoNotificacion.classList.add('bi', 'bi-exclamation-circle');
+            notificacionElemento.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--color-rojo-oscuro');
+        }
 
         //MOSTRAMOS LA NOTIFICACION
         notificacion.show();
