@@ -9,6 +9,8 @@
             return;
         }
 
+        crearLoader('contactosContainer');
+
         google.script.run
             .withSuccessHandler(obj => construirTablaContactos(obj))
             .withFailureHandler(construirTablaContactosError)
@@ -45,6 +47,9 @@
         tablaHeader.classList.add('table-dark');
         tabla.classList.add('table', 'table-striped', 'border', 'border-3', 'border-dark');
 
+        //Destruimos el loader
+        eliminarLoader();
+
         document.getElementById("contactosContainer").appendChild(tabla);
 
         //Mostramos la notificacion de exito
@@ -52,6 +57,10 @@
     }
 
     const construirTablaContactosError = () => {
+        //Eliminamos el loader
+        eliminarLoader();
+
+        //Creamos una notificacion advirtiendo del error
         crearNotificacion(NOTIFICACION_DANGER, "Hubo un problema obteniendo los contactos", "Error!");
     }
 
@@ -91,6 +100,32 @@
 
         //MOSTRAMOS LA NOTIFICACION
         notificacion.show();
+    }
+
+    const crearLoader = (elementoPadre) => {
+        if(document.getElementById('loader')) return;
+
+        let loader = document.createElement('div');
+        loader.id = 'loader';
+
+        loader.appendChild(document.createElement('div'));
+        loader.appendChild(document.createElement('div'));
+        loader.appendChild(document.createElement('div'));
+        loader.appendChild(document.createElement('div'));
+
+        loader.classList.add('lds-ellipsis');
+
+        document.getElementById(elementoPadre).appendChild(loader);
+    }
+
+    const eliminarLoader = () => {
+        let loader = document.getElementById('loader');
+        
+        if(loader) {
+            loader.remove();
+        }
+
+        return;
     }
 
 </script>
