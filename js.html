@@ -3,6 +3,51 @@
     const NOTIFICACION_DANGER = 2;
     const NOTIFICACION_WARNING = 3;
     
+    const guardarNuevoContacto = () => {
+        let nombre = document.getElementById('formNombre').value;
+        let email = document.getElementById('formEmail').value;
+
+        //Chequeamos que los campos existen
+        if(!nombre) {
+            crearNotificacion(NOTIFICACION_WARNING, "El campo nombre es necesario", "Atencion!")
+            return;
+        }
+
+        if(!email) {
+            crearNotificacion(NOTIFICACION_WARNING, "El campo email es necesario", "Atencion!")
+            return;
+        }
+
+        if(document.getElementById('tablaContactos')) document.getElementById('tablaContactos').remove();
+
+        crearLoader('contactosContainer');
+
+        google.script.run
+            .withSuccessHandler(guardarNuevoContactoSuccess)
+            .withFailureHandler(guardarNuevoContactoError)
+            .insertarContacto(nombre, email);
+    }
+
+    const guardarNuevoContactoSuccess = () => {
+        document.getElementById('formNombre').value = '';
+        document.getElementById('formEmail').value = '';
+
+        eliminarLoader();
+        
+        mostrarTablaContactos();
+
+        crearNotificacion(NOTIFICACION_OK, "Contacto creado correctamente", "Listo!");
+    }
+
+    const guardarNuevoContactoError = () => {
+        document.getElementById('formNombre').value = '';
+        document.getElementById('formEmail').value = '';
+
+        eliminarLoader();
+
+        crearNotificacion(NOTIFICACION_DANGER, "No se pudo crear el contacto", "Error!")
+    }
+
     const mostrarTablaContactos = () => {
         if(document.getElementById('tablaContactos')) {
             crearNotificacion(NOTIFICACION_WARNING, "La tabla ya se esta mostrando", 'Atencion!')
