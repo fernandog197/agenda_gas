@@ -20,3 +20,7 @@ function obtenerContactos() {
 function insertarContacto(nombre, apellido, email, wpp) {
     HOJA.appendRow([nombre, apellido, email, wpp]);
 }
+
+function BorrarContacto(numfila) {
+    HOJA.deleteRow(numfila);
+}

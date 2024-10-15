@@ -2,7 +2,8 @@
     const NOTIFICACION_OK = 1;
     const NOTIFICACION_DANGER = 2;
     const NOTIFICACION_WARNING = 3;
-    
+
+    //FUNCIONES GUARDAR CONTACTO
     const guardarNuevoContacto = () => {
         let nombre = document.getElementById('formNombre').value;
         let apellido = document.getElementById('formApellido').value;
@@ -60,6 +61,38 @@
         crearNotificacion(NOTIFICACION_DANGER, "No se pudo crear el contacto", "Error!")
     }
 
+    //FUNCIONES BORRAR CONTACTO    
+    const borrarContacto = (numfila) => {
+        if(numfila == 1) {
+            crearNotificacion(NOTIFICACION_WARNING, "No existen mas contactos!", "Atencion!");
+            return;
+        }
+
+        if(document.getElementById('tablaContactos')) document.getElementById('tablaContactos').remove();
+
+        crearLoader('contactosContainer');
+
+        google.script.run
+            .withSuccessHandler(borrarContactoSuccess)
+            .withFailureHandler(borrarContactoError)
+            .BorrarContacto(numfila);
+    }
+
+    const borrarContactoSuccess = () => {
+        eliminarLoader();
+
+        mostrarTablaContactos();
+
+        crearNotificacion(NOTIFICACION_OK, "Contacto borrado correctamente", "Listo!");
+    }
+
+    const borrarContactoError = () => {
+        eliminarLoader();
+
+        crearNotificacion(NOTIFICACION_DANGER, "No se pudo borrar el contacto", "Error!")
+    }
+
+    //CONSTRUIR Y MOSTRAR TABLA
     const mostrarTablaContactos = () => {
         if(document.getElementById('tablaContactos')) {
             crearNotificacion(NOTIFICACION_WARNING, "La tabla ya se esta mostrando", 'Atencion!')
@@ -90,8 +123,21 @@
                 fila.appendChild(celda);
             })
             
+            //AGREGAMOS BOTONES MODIFICAR Y ELIMINAR
+            if(i != 0) {
+                let celdaBotones = agregarBotonesModificarBorrar(i + 1);
+                fila.appendChild(celdaBotones);
+            }
+
             if(i == 0) {
+                let celdaOpciones = document.createElement('td');
+                celdaOpciones.classList.add('text-center');
+                celdaOpciones.textContent = 'OPCIONES';
+                
+                fila.appendChild(celdaOpciones);
+                
                 tablaHeader.appendChild(fila);
+
                 tabla.appendChild(tablaHeader);
             } else {
                 tablaBody.appendChild(fila);
@@ -99,6 +145,7 @@
             //i == 0? tabla.appendChild(tablaHeader.appendChild(fila)): tablaBody.appendChild(fila); => porque no funciona??
         })
 
+        
         tabla.appendChild(tablaBody);
 
         tablaHeader.classList.add('table-dark');
@@ -111,6 +158,37 @@
 
         //Mostramos la notificacion de exito
         crearNotificacion(NOTIFICACION_OK, 'Contactos obtenidos correctamente', 'Todo en orden');
+    }
+
+    const agregarBotonesModificarBorrar = (numfila) => {
+        let celda = document.createElement('td');
+        celda.classList.add('text-center');
+
+        //Crear boton modificar
+        let botonModificar = document.createElement('button');
+        //botonBorrar.onclick = () => borrarContacto(numfila);
+        botonModificar.classList.add('btn', 'btn-warning', 'm-1');
+        
+        let iconoModificar = document.createElement('i');
+        iconoModificar.classList.add('bi', 'bi-pencil-square');
+
+        botonModificar.appendChild(iconoModificar);
+        
+        //Crear boton borrar
+        let botonBorrar = document.createElement('button');
+        botonBorrar.onclick = () => borrarContacto(numfila);
+        botonBorrar.classList.add('btn', 'btn-danger', 'm-1');
+        
+        let iconoBorrar = document.createElement('i');
+        iconoBorrar.classList.add('bi', 'bi-trash');
+
+        botonBorrar.appendChild(iconoBorrar);
+
+        //Agregamos los botones a la celda
+        celda.appendChild(botonModificar);
+        celda.appendChild(botonBorrar);
+
+        return celda;
     }
 
     const construirTablaContactosError = () => {
